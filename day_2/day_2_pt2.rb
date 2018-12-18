@@ -1,5 +1,3 @@
-require 'pry'
-
 def box_list(input)
   boxes = []
   has_two = 0

@@ -1,5 +1,3 @@
-require 'pry'
-
 def box_id_checksum(input)
   has_two = 0
   has_three = 0

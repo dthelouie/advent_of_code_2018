@@ -1,5 +1,3 @@
-require 'pry'
-
 def frequency_repeat(input, total=[0])
   current = total[-1].to_i
   input.each do |change|
