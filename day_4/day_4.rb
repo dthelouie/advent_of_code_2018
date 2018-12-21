@@ -1,5 +1,4 @@
 require 'time'
-require 'pry'
 
 patrols = {}
 guard_id = 0
@@ -21,9 +20,9 @@ end
 def most_asleep(patrols)
   most = {guard: nil, minute: 0, quantity: 0}
   patrols.each do |guard, minutes|
-    if minutes.values.flatten.length > most[:quantity]
+    if minutes.values.inject(0, :+) > most[:quantity]
       most[:guard] = guard
-      most[:quantity] = minutes.flatten.length
+      most[:quantity] = minutes.values.inject(0, :+)
       most[:minute] = minutes.to_a.max { |a, b| a[1] <=> b[1] }[0]
     end
   end
@@ -34,10 +33,8 @@ input = File.read('input4.txt').split("\n").sort
 
 index = 0
 while index < input.length
-  # puts input[index]
   if input[index].include?("falls asleep")
     asleep = get_time(input[index])
-    # puts input[index + 1] if input[index + 1].include?("wakes up")
     awake = get_time(input[index + 1])
     get_minutes(asleep, awake).each do |minute|
       patrols[guard_id][minute] += 1
@@ -49,7 +46,3 @@ while index < input.length
   index += 1
   index += 1 if input[index].include?("wakes up")
 end
-
-sleepy = most_asleep(patrols)
-puts "guard #{sleepy[:guard]}, minute #{sleepy[:minute]}, #{sleepy[:quantity]} total minutes"
-puts sleepy[:guard] * sleepy[:minute]
