@@ -46,3 +46,7 @@ while index < input.length
   index += 1
   index += 1 if input[index].include?("wakes up")
 end
+
+sleepy = most_asleep(patrols)
+puts sleepy
+puts sleepy[:guard] * sleepy[:minute]

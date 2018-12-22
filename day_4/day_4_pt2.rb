@@ -41,4 +41,5 @@ while index < input.length
   index += 1 if input[index].include?("wakes up")
 end
 
+puts sleepy_minute
 puts sleepy_minute[:guard] * sleepy_minute[:minute]
