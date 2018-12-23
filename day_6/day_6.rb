@@ -19,43 +19,31 @@ def closest_origin(starting_point, origins)
   end
 end
 
-def get_area(coordinates_1, coordinates_2)
-  (coordinates_1[0] - coordinates_2[0]).abs * (coordinates_1[1] - coordinates_2[1]).abs
-end
-
-count = 0
+count = 1
 origins = {}
 
 ### plot origin points
 grid = Array.new(350) {Array.new(350, '.')}
-input = File.read('input6.txt').split("\n").sort.each do |coordinate|
-  origins[count] = coordinate.split(', ').map!(&:to_i)
+input = File.read('input6.txt').split("\n").map {|line| line.split(', ').map {|axis| axis.to_i}}.sort.each do |coordinate|
+  origins[count] = coordinate
   grid[origins[count][0]][origins[count][1]] = count
   count += 1
+  origins[count - 1]
 end
 
 ### assign district bounds
 grid.each_with_index do |row, row_idx|
   row.each_with_index do |col, col_idx|
-    grid[row_idx][col_idx] = closest_origin([row_idx, col_idx], origins)
+    grid[row_idx][col_idx] = closest_origin([row_idx, col_idx], origins) unless origins.values.include?([row_idx, col_idx])
   end
 end
 
 ### eliminate edges from selection process
 edges = (grid[0] + grid[-1] + grid.transpose[0] + grid.transpose[-1]).flatten.uniq.sort
 
-zone = {point_1: nil, point_2: nil, area: 0}
-origins.each do |key_1, coordinates_1|
-  next if edges.include?(key_1)
-  origins.each do |key_2, coordinates_2|
-    next if edges.include?(key_2) || key_1 == key_2
-    area = get_area(coordinates_1, coordinates_2)
-    if area > zone[:area]
-      zone[:area] = area 
-      zone[:point_1] = {key: key_1, coordinates: coordinates_1}
-      zone[:point_2] = {key: key_2, coordinates: coordinates_2}
-    end
-  end
+cells = grid.flatten(1)
+areas = ((1..50).to_a - edges).map do |number|
+  [number, cells.count(number)]
 end
 
-puts zone
+puts areas.max {|a, b| a[1] <=> b[1]}
